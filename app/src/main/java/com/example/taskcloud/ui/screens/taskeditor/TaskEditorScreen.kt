@@ -1,5 +1,6 @@
 package com.example.taskcloud.ui.screens.taskeditor
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -39,6 +40,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -53,6 +55,8 @@ fun TaskEditorScreen(
 ) {
     val viewModel: TaskEditorViewModel = hiltViewModel()
 
+    val context = LocalContext.current
+
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     TaskEditorScreen(
@@ -60,10 +64,13 @@ fun TaskEditorScreen(
         onAddTask = {
             viewModel.addTask(it)
             onBackClick()
+            Toast.makeText(context, "Task Added", Toast.LENGTH_LONG).show()
         },
         onUpdateTask = {
             viewModel.updateTask(it)
             onBackClick()
+            Toast.makeText(context, "Task Edited", Toast.LENGTH_LONG).show()
+
         },
         onBackClick = onBackClick
     )
