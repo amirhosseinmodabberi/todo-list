@@ -200,6 +200,10 @@ private fun TaskItem(
                 style = MaterialTheme.typography.bodyMedium,
                 color = dueDateColor
             )
+            Text(
+                text = "${task.dueHour ?: "No time set"}:${task.dueMinute ?: "No time set"}",
+                style = MaterialTheme.typography.bodyMedium,
+            )
         }
 
         Box {

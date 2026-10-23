@@ -3,12 +3,16 @@ package com.example.taskcloud.ui.screens.taskeditor
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.filled.AccessTime
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.DatePicker
@@ -22,10 +26,12 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.material3.TimePicker
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.material3.getSelectedDate
 import androidx.compose.material3.rememberDatePickerState
+import androidx.compose.material3.rememberTimePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -130,6 +136,18 @@ fun AddTaskContent(
 
     var selectedDate by remember(taskToEdit) { mutableStateOf(taskToEdit?.dueDate) }
 
+    var showTimePickerDialog by remember(taskToEdit) {
+        mutableStateOf(false)
+    }
+
+    var selectedHour by remember(taskToEdit) {
+        mutableStateOf(taskToEdit?.dueHour)
+    }
+
+    var selectedMinute by remember(taskToEdit) {
+        mutableStateOf(taskToEdit?.dueMinute)
+    }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
@@ -156,12 +174,45 @@ fun AddTaskContent(
             )
         }
 
+        OutlinedButton(
+            onClick = { showTimePickerDialog = true }
+        ) {
+            Icon(
+                imageVector = Icons.Default.AccessTime,
+                contentDescription = "Select time"
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Text(
+                text = if (selectedHour != null && selectedMinute != null) {
+                    "%02d:%02d".format(selectedHour, selectedMinute)
+                } else {
+                    "Select task time"
+                }
+            )
+        }
+
         Button(
             onClick = {
                 if (taskToEdit != null) {
-                    onEditTask(taskToEdit.copy(task = taskName, dueDate = selectedDate))
+                    onEditTask(
+                        taskToEdit.copy(
+                            task = taskName,
+                            dueDate = selectedDate,
+                            dueHour = selectedHour,
+                            dueMinute = selectedMinute
+                        )
+                    )
                 } else {
-                    onAddTask(Task(task = taskName, dueDate = selectedDate))
+                    onAddTask(
+                        Task(
+                            task = taskName,
+                            dueDate = selectedDate,
+                            dueHour = selectedHour,
+                            dueMinute = selectedMinute
+                        )
+                    )
                 }
             },
             enabled = taskName.isNotBlank(),
@@ -201,6 +252,45 @@ fun AddTaskContent(
                 state = datePickerState
             )
         }
+    }
+    if (showTimePickerDialog) {
+        val timePickerState = rememberTimePickerState(
+            initialHour = selectedHour ?: 9,
+            initialMinute = selectedMinute ?: 0,
+            is24Hour = true
+        )
+
+        AlertDialog(
+            onDismissRequest = {
+                showTimePickerDialog = false
+            },
+            title = {
+                Text("Select task time")
+            },
+            text = {
+                TimePicker(state = timePickerState)
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        selectedHour = timePickerState.hour
+                        selectedMinute = timePickerState.minute
+                        showTimePickerDialog = false
+                    }
+                ) {
+                    Text("OK")
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showTimePickerDialog = false
+                    }
+                ) {
+                    Text("Cancel")
+                }
+            }
+        )
     }
 }
 

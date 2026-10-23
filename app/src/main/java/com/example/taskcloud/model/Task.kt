@@ -8,11 +8,15 @@ data class Task(
     val task: String,
     val isCompleted: Boolean = false,
     val dueDate: LocalDate? = null,
+    val dueHour: Int? = null,
+    val dueMinute: Int? = null,
 )
 
 fun Task.mapToEntity() = TaskEntity(
     id = id ?: 0,
     task = task,
     isCompleted = isCompleted,
-    dueDate = dueDate
+    dueDate = dueDate,
+    dueHour = dueHour,
+    dueMinute = dueMinute
 )

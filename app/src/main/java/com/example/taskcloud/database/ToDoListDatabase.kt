@@ -8,7 +8,7 @@ import com.example.taskcloud.database.entity.TaskEntity
 
 @Database(
     entities = [TaskEntity::class],
-    version = 2,
+    version = 3,
 )
 @TypeConverters(
     LocalDateConverter::class,

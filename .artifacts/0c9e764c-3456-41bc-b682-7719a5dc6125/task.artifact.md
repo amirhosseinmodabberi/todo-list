@@ -1,0 +1,4 @@
+- [ ] Update `gradle/libs.versions.toml` with latest stable versions
+- [ ] Update root `build.gradle.kts` plugins
+- [ ] Update `app/build.gradle.kts` dependencies and SDK versions
+- [ ] Perform Gradle Sync and verify

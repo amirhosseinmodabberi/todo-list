@@ -3,6 +3,7 @@ package com.example.taskcloud.database.di
 import android.content.Context
 import androidx.room.Room
 import com.example.taskcloud.database.MIGRATION_1_2
+import com.example.taskcloud.database.MIGRATION_2_3
 import com.example.taskcloud.database.ToDoListDatabase
 import dagger.Module
 import dagger.Provides
@@ -25,7 +26,10 @@ class DatabaseModule {
             ToDoListDatabase::class.java,
             "TodoList-db"
         )
-            .addMigrations(MIGRATION_1_2)
+            .addMigrations(
+                MIGRATION_1_2,
+                MIGRATION_2_3
+            )
             .build()
     }
 }
